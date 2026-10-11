@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORIGIN — Freelance 3D Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-0:#ffffff;
+    --blue-50:#ebf1ff;
+    --blue-200:#b1caff;
+    --blue-500:#0050f8;
+    --blue-950:#001033;
+    --neural-0:#fcfcfd;
+    --neural-50:#f1f1f1;
+    --neural-100:#e1e1e3;
+    --neural-200:#c5c5c7;
+    --neural-400:#8f8f93;
+    --neural-500:#757579;
+    --neural-700:#464649;
+    --neural-800:#2f2f31;
+    --neural-900:#1a1b1c;
+    --neural-950:#111111;
+    --red:#f71519;
+    --max-w:1440px;
+    --pad-x:64px;
+
+    /* Figma-hosted asset URLs — sourced directly from the file.
+       Figma stores these for ~7 days; if they 404 later, ask me to
+       re-pull fresh ones from the same node IDs. */
+    --img-logo-mark: url("https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/855b9.png");
+    --img-hero-bg: url("https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/3c798.png");
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Manrope',sans-serif;
+    color:var(--neural-950);
+    background:var(--blue-0);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+  .wrap{max-width:var(--max-w);margin:0 auto;padding:0 var(--pad-x);}
+
+  .icon{width:24px;height:24px;flex-shrink:0;object-fit:contain;}
+
+  .cover-img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    height:56px;padding:0 24px;border-radius:8px;font-size:18px;font-weight:500;
+    box-shadow:0 4px 4px rgba(0,0,0,.1),0 2px 2px rgba(0,0,0,.1),0 1px 1px rgba(0,0,0,.1);
+    white-space:nowrap;transition:opacity .15s ease, transform .15s ease;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn-primary{background:var(--blue-500);color:#fff;}
+  .btn-primary:hover{opacity:.92;}
+  .btn-secondary{background:#fff;color:var(--neural-950);border:1px solid var(--neural-100);}
+  .btn-secondary:hover{background:var(--neural-50);}
+  .btn:disabled{opacity:.6;cursor:not-allowed;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;left:0;right:0;z-index:100;
+    height:80px;background:#fff;border-bottom:1px solid transparent;
+  }
+  header .wrap{height:80px;display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;font-size:28px;font-weight:600;color:var(--neural-950);}
+  .logo-mark{
+    width:40px;height:40px;flex-shrink:0;margin-right:6px;
+    position:relative;overflow:hidden;
+  }
+  .logo-mark img{
+    position:absolute;left:-183.07%;top:-20.14%;width:456.12%;height:184.17%;max-width:none;
+  }
+  nav.primary-nav{display:flex;align-items:center;gap:40px;}
+  nav.primary-nav a{font-size:16px;color:var(--neural-950);font-weight:400;position:relative;}
+  nav.primary-nav a:hover{color:var(--blue-500);}
+  header .btn{height:48px;width:168px;font-size:16px;}
+
+  .nav-toggle{display:none;flex-direction:column;gap:5px;width:32px;background:none;border:none;}
+  .nav-toggle span{height:2px;background:var(--neural-950);border-radius:2px;}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;border-bottom:1px solid var(--neural-200);overflow:hidden;}
+  .hero-bg{
+    position:absolute;inset:0;z-index:0;
+    background-image:var(--img-hero-bg);
+    background-size:cover;
+    background-position:center;
+  }
+  .hero .wrap{
+    position:relative;z-index:1;
+    min-height:688px;display:flex;align-items:center;padding-top:64px;padding-bottom:64px;
+  }
+  .hero-content{display:flex;flex-direction:column;gap:56px;max-width:602px;}
+  .hero-top{display:flex;flex-direction:column;gap:40px;}
+  .hero-copy{display:flex;flex-direction:column;gap:16px;}
+  .badge{
+    align-self:flex-start;
+    display:inline-flex;align-items:center;
+    height:40px;padding:8px 16px;border-radius:29px;
+    background:var(--blue-50);border:1px solid var(--blue-200);
+    color:var(--blue-500);font-size:14px;font-weight:600;letter-spacing:.05em;
+  }
+  h1.hero-title{
+    font-size:64px;line-height:1.28;font-weight:600;color:var(--neural-950);
+  }
+  h1.hero-title .accent{color:var(--blue-500);}
+  .hero-sub{font-size:18px;line-height:1.7;font-weight:500;color:var(--neural-500);max-width:452px;}
+  .hero-cta{display:flex;gap:32px;align-items:center;flex-wrap:wrap;}
+  .hero-cta .btn{height:64px;width:200px;}
+
+  .hero-stats{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    border-top:1px solid var(--neural-100);padding-top:24px;
+  }
+  .hero-stats .stat{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--neural-950);white-space:nowrap;}
+
+  /* ---------- Section shell ---------- */
+  section{padding:80px 0;}
+  .eyebrow{font-size:22px;font-weight:500;color:var(--blue-500);letter-spacing:.02em;}
+
+  /* ---------- Featured Work ---------- */
+  .work-head{display:flex;flex-direction:column;gap:16px;margin-bottom:48px;}
+  .work-head-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .work-head-row h2{font-size:34px;font-weight:500;color:var(--blue-950);}
+  .view-all{display:inline-flex;align-items:center;gap:8px;color:var(--blue-500);font-size:18px;font-weight:500;flex-shrink:0;}
+  .work-grid{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:16px;
+  }
+  .work-card{
+    background:var(--neural-0);border-radius:16px;overflow:hidden;
+    box-shadow:0 8px 8px rgba(0,0,0,.06),0 4px 4px rgba(0,0,0,.06),0 2px 2px rgba(0,0,0,.06),0 1px 1px rgba(0,0,0,.06);
+    display:flex;flex-direction:column;
+  }
+  .work-card .thumb{aspect-ratio:245/271;width:100%;overflow:hidden;}
+  .work-card .info{padding:14px 16px 16px;display:flex;flex-direction:column;gap:5px;}
+  .work-card .info h3{font-size:16px;font-weight:600;color:var(--blue-950);}
+  .work-card .info p{font-size:14px;font-weight:400;color:var(--neural-400);}
+
+  /* ---------- About ---------- */
+  .about{display:flex;align-items:center;gap:64px;}
+  .about-photo{
+    flex:0 0 534px;height:370px;border-radius:16px;border:1px solid var(--neural-400);overflow:hidden;
+  }
+  .about-content{display:flex;flex-direction:column;gap:40px;flex:1;min-width:0;}
+  .about-heading{max-width:284px;display:flex;flex-direction:column;gap:16px;}
+  .about-heading h2{font-size:34px;font-weight:500;color:var(--blue-950);}
+  .about-heading .role{font-size:22px;font-weight:500;color:var(--blue-500);margin-top:8px;}
+  .about-text{font-size:16px;line-height:1.75;font-weight:500;color:var(--neural-500);}
+  .about-stats{display:flex;gap:64px;flex-wrap:wrap;}
+  .about-stats .stat{display:flex;flex-direction:column;gap:4px;}
+  .about-stats .stat .num{display:flex;align-items:center;gap:8px;font-size:24px;font-weight:500;color:var(--blue-950);}
+  .about-stats .stat .label{font-size:16px;font-weight:500;color:var(--neural-500);}
+
+  /* ---------- Services ---------- */
+  .services-head{text-align:center;max-width:678px;margin:0 auto 56px;display:flex;flex-direction:column;gap:24px;align-items:center;}
+  .services-head h2{font-size:36px;font-weight:500;color:var(--blue-950);}
+  .services-head p{font-size:18px;font-weight:500;color:var(--neural-900);}
+  .services-row{
+    display:grid;grid-template-columns:repeat(5,1fr);position:relative;
+  }
+  .services-row::before{
+    content:"";position:absolute;top:40px;left:40px;right:40px;height:0;
+    border-top:2px dotted var(--neural-200);z-index:0;
+  }
+  .connector-arrow{
+    position:absolute;top:40px;width:16px;height:16px;
+    transform:translate(-50%,-50%);z-index:1;pointer-events:none;
+    background:var(--neural-0);
+  }
+  .connector-arrow svg{width:100%;height:100%;display:block;}
+  .service-item{display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px;text-align:center;position:relative;z-index:1;}
+  .service-icon{
+    width:64px;height:64px;border-radius:999px;background:#fff;
+    display:flex;align-items:center;justify-content:center;position:relative;z-index:1;
+    box-shadow:0 0 16px rgba(102,102,102,.08),0 0 8px rgba(102,102,102,.08),0 0 4px rgba(76,76,76,.08);
+  }
+  .service-icon img{width:32px;height:32px;object-fit:contain;}
+  .service-item h3{font-size:16px;font-weight:600;color:var(--blue-950);}
+  .service-item p{font-size:14px;font-weight:400;color:var(--neural-900);line-height:1.5;}
+
+  /* ---------- Contact ---------- */
+  .contact-section{background:var(--neural-50);padding:80px 0;}
+  .contact-wrap{
+    display:flex;gap:96px;align-items:flex-start;justify-content:center;flex-wrap:wrap;
+  }
+  .contact-intro{max-width:383px;padding-top:8px;}
+  .contact-intro .eyebrow{display:block;margin-bottom:20px;}
+  .contact-intro h2{
+    font-family:'Manrope',sans-serif;font-weight:300;font-size:46px;line-height:1.25;
+    color:var(--neural-800);letter-spacing:-0.02em;
+  }
+  .contact-form-card{
+    width:100%;max-width:511px;background:#fff;border:1px solid var(--neural-500);
+    border-radius:16px;padding:32px;
+  }
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .field{display:flex;flex-direction:column;margin-top:16px;}
+  .form-row .field{margin-top:0;}
+  .field label{
+    font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--neural-950);margin-bottom:8px;
+  }
+  .field label .req{color:var(--red);}
+  .field input,.field select,.field textarea{
+    font-family:inherit;border:1px solid var(--neural-500);border-radius:10px;
+    padding:14px 16px;font-size:14.5px;font-weight:300;color:var(--neural-950);
+    background:#fff;width:100%;
+  }
+  .field input::placeholder,.field textarea::placeholder{color:var(--neural-500);font-weight:300;}
+  .field select{appearance:none;-webkit-appearance:none;color:var(--neural-950);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23757579' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 16px center;padding-right:40px;
+  }
+  .field select:invalid{color:var(--neural-500);}
+  .field textarea{resize:vertical;min-height:116px;font-family:inherit;}
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:none;border-color:var(--blue-500);box-shadow:0 0 0 3px var(--blue-50);
+  }
+  .form-submit{margin-top:24px;}
+  .form-submit .btn{width:100%;height:48px;}
+  .form-note{margin-top:16px;text-align:center;font-size:12px;font-weight:300;color:var(--neural-950);}
+  .form-status{
+    margin-top:16px;text-align:center;font-size:14px;font-weight:600;min-height:20px;
+  }
+  .form-status.success{color:#0a8a3d;}
+  .form-status.error{color:var(--red);}
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--blue-50);border-top:1px solid var(--blue-500);
+    padding:64px 0 40px;
+  }
+  .footer-top{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+  .footer-brand{max-width:330px;}
+  .footer-brand p{margin-top:16px;font-size:14px;font-weight:300;line-height:1.6;color:var(--neural-700);}
+  .footer-col h4{
+    font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--neural-950);margin-bottom:24px;
+  }
+  .footer-col ul{display:flex;flex-direction:column;gap:12px;}
+  .footer-col a{font-size:14px;font-weight:300;color:var(--neural-700);display:flex;align-items:center;gap:8px;}
+  .footer-col a:hover{color:var(--blue-500);}
+  .footer-bottom{
+    margin-top:64px;padding-top:32px;border-top:1px solid var(--neural-200);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-size:12px;
+  }
+  .footer-bottom p:first-child{color:var(--neural-900);font-weight:300;}
+  .footer-bottom p:last-child{color:var(--neural-950);font-weight:300;}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:1200px){
+    .work-grid{grid-template-columns:repeat(3,1fr);}
+    .services-row{grid-template-columns:repeat(3,1fr);row-gap:32px;}
+    .services-row::before{display:none;}
+    .connector-arrow{display:none;}
+  }
+
+  @media (max-width:1024px){
+    :root{--pad-x:32px;}
+    .about{flex-direction:column;}
+    .about-photo{width:100%;flex:none;}
+    .contact-wrap{flex-direction:column;align-items:center;}
+    .contact-intro{text-align:center;}
+    .contact-intro .eyebrow{display:inline-block;}
+  }
+
+  @media (max-width:860px){
+    nav.primary-nav{
+      position:fixed;top:80px;left:0;right:0;bottom:0;background:#fff;
+      flex-direction:column;align-items:flex-start;gap:0;padding:24px var(--pad-x);
+      transform:translateX(100%);transition:transform .25s ease;z-index:99;
+    }
+    nav.primary-nav.open{transform:translateX(0);}
+    nav.primary-nav a{width:100%;padding:16px 0;border-bottom:1px solid var(--neural-100);font-size:18px;}
+    .nav-toggle{display:flex;}
+    header .btn{display:none;}
+    h1.hero-title{font-size:44px;}
+    .work-grid{grid-template-columns:repeat(2,1fr);}
+    .services-row{grid-template-columns:repeat(2,1fr);}
+    .footer-top{gap:40px;}
+  }
+
+  @media (max-width:560px){
+    :root{--pad-x:20px;}
+    section{padding:56px 0;}
+    h1.hero-title{font-size:36px;}
+    .hero-sub{font-size:16px;}
+    .hero-cta{flex-direction:column;align-items:stretch;}
+    .hero-cta .btn{width:100%;}
+    .hero-stats{justify-content:flex-start;gap:24px 32px;}
+    .work-grid{grid-template-columns:1fr 1fr;}
+    .work-head-row{flex-direction:column;align-items:flex-start;gap:12px;}
+    .services-row{grid-template-columns:1fr;}
+    .about-stats{gap:32px;}
+    .contact-intro h2{font-size:34px;}
+    .form-row{grid-template-columns:1fr;}
+    .contact-form-card{padding:24px;}
+    .footer-top{flex-direction:column;gap:32px;}
+    .footer-bottom{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="wrap">
+    <a href="#home" class="logo">
+      <span class="logo-mark"><img src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/29551.png" alt="ORIGIN"></span>
+      ORIGIN
+    </a>
+    <nav class="primary-nav" id="primaryNav">
+      <a href="#home">Home</a>
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="btn btn-primary">Let's Talk</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="wrap">
+    <div class="hero-content">
+      <div class="hero-top">
+        <div class="hero-copy">
+          <span class="badge">FREELANCE 3D ARTISTS</span>
+          <h1 class="hero-title">Bringing Ideas to Life in<span class="accent"> 3D.</span></h1>
+        </div>
+        <p class="hero-sub">High-quality 3D product visualization that helps brands showcase their products with realism, detail, and visual impact</p>
+      </div>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">
+          Start a Project
+        </a>
+        <a href="#work" class="btn btn-secondary">
+          View My Work
+          <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/70dc2.svg" alt="">
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/1b690.svg" alt="">
+          3D Modeling
+        </div>
+        <div class="stat">
+          <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/e17a4.svg" alt="">
+          Rendering
+        </div>
+        <div class="stat">
+          <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/c85e6.svg" alt="">
+          Texturing
+        </div>
+        <div class="stat">
+          <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/8a6fb.svg" alt="">
+          Animation
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED WORK ============ -->
+<section id="work">
+  <div class="wrap">
+    <div class="work-head">
+      <span class="eyebrow">FEATURED WORK</span>
+      <div class="work-head-row">
+        <h2>Selected Projects</h2>
+      </div>
+    </div>
+    <div class="work-grid">
+      <div class="work-card">
+        <div class="thumb"><img class="cover-img" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/dabde.png" alt="Emerald Luxe Perfume"></div>
+        <div class="info"><h3>Emerald Luxe Perfume</h3><p>Luxury Fragrance Visualization</p></div>
+      </div>
+      <div class="work-card">
+        <div class="thumb"><img class="cover-img" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/eff88.png" alt="Aero Gaming Chair"></div>
+        <div class="info"><h3>Aero Gaming Chair</h3><p>Gaming Chair Visualization</p></div>
+      </div>
+      <div class="work-card">
+        <div class="thumb"><img class="cover-img" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/b17f6.png" alt="Oakwood Side Table"></div>
+        <div class="info"><h3>Oakwood Side Table</h3><p>Furniture Product Visualization</p></div>
+      </div>
+      <div class="work-card">
+        <div class="thumb"><img class="cover-img" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/f4820.png" alt="Golden Essence Perfume"></div>
+        <div class="info"><h3>Golden Essence Perfume</h3><p>Premium Fragrance Visualization</p></div>
+      </div>
+      <div class="work-card">
+        <div class="thumb"><img class="cover-img" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/bba2e.png" alt="Mustang GT"></div>
+        <div class="info"><h3>Mustang GT</h3><p>Automotive 3D Visualization</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="wrap about">
+    <div class="about-photo"><img class="cover-img" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/a2cdd.png" alt="Prabakaran, 3D Artist & Visualizer"></div>
+    <div class="about-content">
+      <div class="about-heading">
+        <span class="eyebrow">ABOUT ME</span>
+        <div>
+          <h2>HI, I'm Prabakaran</h2>
+          <div class="role">3D Artist &amp; Visualizer</div>
+        </div>
+      </div>
+      <p class="about-text">I help businesses and creators bring their ideas to life through stunning 3D visuals, with a strong eye for detail, lighting, materials and composition. I create visuals that not only look realistic but also communicate your product's true value.</p>
+      <div class="about-stats">
+        <div class="stat">
+          <div class="num">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/08eef.svg" alt="">
+            3+
+          </div>
+          <div class="label">Years Experience</div>
+        </div>
+        <div class="stat">
+          <div class="num">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/0be5e.svg" alt="">
+            50+
+          </div>
+          <div class="label">Project Completed</div>
+        </div>
+        <div class="stat">
+          <div class="num">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/27174.svg" alt="">
+            5
+          </div>
+          <div class="label">Creative Services</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="services">
+  <div class="wrap">
+    <div class="services-head">
+      <span class="eyebrow">SERVICES</span>
+      <div>
+        <h2>From Concept to Final Render</h2>
+        <p>I bring your ideas to life through modeling, materials, visualization and animation.</p>
+      </div>
+    </div>
+    <div class="services-row">
+      <div class="service-item">
+        <div class="service-icon"><img src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/3a525.svg" alt=""></div>
+        <h3>3D Modeling</h3>
+        <p>From concept to detailed 3D models.</p>
+      </div>
+      <div class="connector-arrow" style="left:20%">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c5c5c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+      <div class="service-item">
+        <div class="service-icon"><img src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/8a85e.svg" alt=""></div>
+        <h3>Texturing &amp; Materials</h3>
+        <p>Realistic materials, textures &amp; surfaces.</p>
+      </div>
+      <div class="connector-arrow" style="left:40%">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c5c5c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+      <div class="service-item">
+        <div class="service-icon"><img src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/181d1.svg" alt=""></div>
+        <h3>Product Visualization</h3>
+        <p>Photorealistic product renders that showcase every details.</p>
+      </div>
+      <div class="connector-arrow" style="left:60%">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c5c5c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+      <div class="service-item">
+        <div class="service-icon"><img src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/27e75.svg" alt=""></div>
+        <h3>3D Animation</h3>
+        <p>Motion that brings your product to life.</p>
+      </div>
+      <div class="connector-arrow" style="left:80%">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c5c5c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+      <div class="service-item">
+        <div class="service-icon"><img src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/29717.svg" alt=""></div>
+        <h3>Motion Graphics</h3>
+        <p>Engaging visuals for your brand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact-section" id="contact">
+  <div class="wrap contact-wrap">
+    <div class="contact-intro">
+      <span class="eyebrow">Let's Work Together</span>
+      <h2>Have a Product in Mind? Let's Bring It to Life.</h2>
+    </div>
+
+    <div class="contact-form-card">
+      <form id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Full Name <span class="req">*</span></label>
+            <input type="text" id="name" name="name" placeholder="Alex Johnson" required>
+          </div>
+          <div class="field">
+            <label for="email">Email Address <span class="req">*</span></label>
+            <input type="email" id="email" name="email" placeholder="alex@brand.com" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="companyBrand">Company / Brand</label>
+          <input type="text" id="companyBrand" name="companyBrand" placeholder="Lumière Studio (optional)">
+        </div>
+
+        <div class="field">
+          <label for="whatYouNeed">What Do You Need? <span class="req">*</span></label>
+          <select id="whatYouNeed" name="whatYouNeed" required>
+            <option value="" disabled selected>Select a service</option>
+            <option value="3D Modeling">3D Modeling</option>
+            <option value="Texturing & Materials">Texturing &amp; Materials</option>
+            <option value="Product Visualization">Product Visualization</option>
+            <option value="3D Animation">3D Animation</option>
+            <option value="Motion Graphics">Motion Graphics</option>
+            <option value="Not Sure Yet">Not Sure Yet</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="projectDetails">Tell Me About Your Project <span class="req">*</span></label>
+          <textarea id="projectDetails" name="projectDetails" placeholder="Describe your product, goals, timeline, and any references you have..." required></textarea>
+        </div>
+
+        <div class="form-submit">
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <span id="submitLabel">Start a Project</span>
+          </button>
+        </div>
+        <p class="form-note">I'll get back to you within 24–48 hours.</p>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#home" class="logo" style="font-size:28px;">
+          <span class="logo-mark"><img src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/29551.png" alt="ORIGIN"></span>ORIGIN
+        </a>
+        <p>Turning Ideas Into Visual Experiences. High-quality 3D visuals for products, brands, and ideas that deserve to stand out.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Follow me</h4>
+        <ul>
+          <li><a href="https://www.behance.net/prabakaran66" target="_blank" rel="noopener">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/83d6d.svg" alt="">
+            Behance
+          </a></li>
+          <li><a href="https://www.linkedin.com/in/praba-karan-67335821b" target="_blank" rel="noopener">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/64f5f.svg" alt="">
+            LinkedIn
+          </a></li>
+          <li><a href="https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&utm_medium=copy_link&utm_content=4o1iixt" target="_blank" rel="noopener">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/2731d.svg" alt="">
+            Instagram
+          </a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <ul>
+          <li><a href="tel:+917550376819">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/0e764.svg" alt="" style="transform:rotate(180deg);">
+            +91 7550376819
+          </a></li>
+          <li><a href="#">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/9d753.svg" alt="">
+            India
+          </a></li>
+          <li><a href="mailto:pkorgin001@gmail.com">
+            <img class="icon" src="https://www.figma.com/api/mcp/asset/3fa34a2c-916c-40d8-8724-d1994b0929ab/14672.svg" alt="">
+            pkorgin001@gmail.com
+          </a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Alex. All rights reserved.</p>
+      <p>Let's create something worth looking at.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- Mobile nav toggle ---- */
+  var navToggle = document.getElementById('navToggle');
+  var primaryNav = document.getElementById('primaryNav');
+  navToggle.addEventListener('click', function(){
+    primaryNav.classList.toggle('open');
+  });
+  primaryNav.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') primaryNav.classList.remove('open');
+  });
+
+  /* ---- Contact form -> Google Apps Script ---- */
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNmDIZOoVn4ooskqKTtzf8r6EA5m1Zv0PVTCq6U4agg8PtHTIqPvzN7aWXMfs9R_nYPA/exec";
+
+  var form = document.getElementById('contactForm');
+  var submitBtn = document.getElementById('submitBtn');
+  var submitLabel = document.getElementById('submitLabel');
+  var statusEl = document.getElementById('formStatus');
+  var isSubmitting = false;
+
+  function showSuccess(){
+    statusEl.textContent = "Thanks! Your message has been sent — I'll be in touch within 24–48 hours.";
+    statusEl.className = "form-status success";
+    form.reset();
+  }
+
+  function showError(){
+    statusEl.textContent = "Something went wrong sending your message. Please try again, or email pkorgin001@gmail.com directly.";
+    statusEl.className = "form-status error";
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    if (isSubmitting) return;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    isSubmitting = true;
+    submitBtn.disabled = true;
+    submitLabel.textContent = "Sending...";
+    statusEl.textContent = "";
+    statusEl.className = "form-status";
+
+    var name = document.getElementById('name').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var companyBrand = document.getElementById('companyBrand').value.trim();
+    var whatYouNeed = document.getElementById('whatYouNeed').value;
+    var projectDetails = document.getElementById('projectDetails').value.trim();
+
+    var url = SCRIPT_URL + "?" + new URLSearchParams({
+      name: name,
+      email: email,
+      companyBrand: companyBrand,
+      whatYouNeed: whatYouNeed,
+      projectDetails: projectDetails
+    });
+
+    fetch(url, {
+      method: "GET",
+      mode: "no-cors"
+    })
+      .then(function(){ showSuccess(); })
+      .catch(function(){ showError(); })
+      .finally(function(){
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitLabel.textContent = "Start a Project";
+      });
+  });
+})();
+</script>
+</body>
+</html>
